@@ -17,6 +17,7 @@
 1. What are the tech and/or skill dependencies of your project?
   - Integration with 3rd party APIs.
 1. What does success look like for this project? What does _done_ mean?
+  - Initial success will be recreating the same functionality of the CLI-based [route-weather](https://github.com/jasonmlutz/route-weather) using JavaScript instead of Python.
   - The final project will take input from the user (origin, destination, departure time) and display driving
   directions paired with weather forecasts for each step of the trip (at the time of arrival at each checkpoint).
   - Long-term: integrate interactive visual map displaying route and weather (as opposed to only a printable list).
