@@ -1,0 +1,5 @@
+# this does not need to be shared -- just my notes as I work through the project
+notes/
+
+# because it's annoying
+.DS_Store
