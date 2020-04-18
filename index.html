@@ -8,11 +8,16 @@
     <header>
       <h1>Route Weather</h1>
     </header>
+    <main>
     <section>
       <h2>What is this?</h2>
       <p>An interactive tool for displaying driving directions paired with
       predicted or observed weather conditions at each step of the route.</p>
 
+      <h2>Get Started</h2>
+      <label for="starting-point-input">Enter your starting point:</label>
+      <input type="text" id="starting-point-input" required size="20">
+      <p id="starting-point-log"></p>
       <h3>Credits</h3>
       <p>Weather data <a target="_blank" href="http://darksky.net/dev">Powered by Dark Sky</a>.</p>
       <p>Map data from <a target="_blank" href="http://www.mapbox.com/">Mapbox</a>.</p>
@@ -20,5 +25,9 @@
       <h3>Note</h3>
       <p>Weather data for trips more than 10 days in the future will be based on historical trends.</p>
     </section>
+  </main>
+  <script type="text/javascript" src="assets/javascripts/rw.js"></script>
+  <script type="text/javascript" src="assets/javascripts/navigation.js"></script>
+  <script type="text/javascript" src="assets/javascripts/weather.js"></script>
   </body>
 </html>
