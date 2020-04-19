@@ -14,7 +14,7 @@ const generateMapboxURL = (searchText) => {
 
 // This works, when entered one line at a time in the console .....
 // need a promise?
-const initialLocationSearch = (searchText) => {
+const xhrLocationSearch = (searchText) => {
   xhr = new XMLHttpRequest();
   xhr.open('GET', generateMapboxURL(searchText));
   xhr.responseType = "json";
@@ -22,8 +22,20 @@ const initialLocationSearch = (searchText) => {
   return xhr.response
 }
 
+// Same response (?), native interaction with promises (?)
+const fetchLocationSearch = (searchText) => {
+  fetch(searchText).then(
+    (response) => {
+        return response.json();
+    }).then(
+    (data) => {
+        console.log(data);
+    })
+}
+
+// Basic structure for pulling the place_name field(s) from a response
 const pullPlaceNames = (response) => {
   response.forEach(loc => {
     console.log(loc.place_name);
-  };
-};
+  }
+)};
