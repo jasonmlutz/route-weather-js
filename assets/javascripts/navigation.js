@@ -21,3 +21,9 @@ const initialLocationSearch = (searchText) => {
   xhr.send();
   return xhr.response
 }
+
+const pullPlaceNames = (response) => {
+  response.forEach(loc => {
+    console.log(loc.place_name);
+  };
+};
