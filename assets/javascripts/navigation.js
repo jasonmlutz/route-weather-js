@@ -11,7 +11,6 @@ const generateMapboxURL = (searchText) => {
   }
 }
 
-
 // This works, when entered one line at a time in the console .....
 // need a promise?
 const xhrLocationSearch = (searchText) => {
@@ -24,12 +23,16 @@ const xhrLocationSearch = (searchText) => {
 
 // Same response (?), native interaction with promises (?)
 const fetchLocationSearch = (searchText) => {
-  fetch(searchText)
+  // TODO - implement encodeURI() for inputs like "spokane, wa"
+  fetch(generateMapboxURL(searchText))
     .then((response) => {
       return response.json();
     })
     .then((data) => {
       console.log(data);
+      data.features.forEach(loc => {
+        console.log(loc.place_name)
+      })
     })
 }
 
