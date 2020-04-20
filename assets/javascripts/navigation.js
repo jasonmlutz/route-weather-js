@@ -24,12 +24,12 @@ const xhrLocationSearch = (searchText) => {
 
 // Same response (?), native interaction with promises (?)
 const fetchLocationSearch = (searchText) => {
-  fetch(searchText).then(
-    (response) => {
-        return response.json();
-    }).then(
-    (data) => {
-        console.log(data);
+  fetch(searchText)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
     })
 }
 
