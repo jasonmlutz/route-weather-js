@@ -2,7 +2,7 @@
 // forward geocoding request format:
 // mapboxURL = `https://api.mapbox.com/geocoding/v5/mapbox.places/{search_text}.json?${mapBoxToken}`
 
-const baseRequestURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
+let baseRequestURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
 const generateMapboxURL = (searchText) => {
   if (typeof searchText != "string") {
     console.warn(`searchText {${searchText}} is not of type "string"`);
@@ -22,13 +22,14 @@ const xhrLocationSearch = (searchText) => {
 }
 
 // Same response (?), native interaction with promises (?)
-const fetchLocationSearch = (searchText) => {
+const fetchLocationSearch = (searchText, outputLoc) => {
   // TODO - implement encodeURI() for inputs like "spokane, wa"
   fetch(generateMapboxURL(searchText))
     .then((response) => {
       return response.json();
     })
     .then((data) => {
+      window.outputLoc = data;
       console.log(data);
       data.features.forEach(loc => {
         console.log(loc.place_name)
@@ -42,3 +43,15 @@ const pullPlaceNames = (response) => {
     console.log(loc.place_name);
   }
 )};
+
+// // test log; form submit event listener
+// function logSubmit(event) {
+//   log.textContent = `Form Submitted! Time stamp: ${event.timeStamp}`;
+//   event.preventDefault();
+// }
+//
+// const log = document.getElementById('starting-point-log');
+// const form = document.getElementById('starting-point-form');
+//
+// // event listener for form submit
+// form.addEventListener('submit', logSubmit);
