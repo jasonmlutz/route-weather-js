@@ -1,5 +1,7 @@
-// let startingPointInput = document.querySelector("input[id='starting-point-input']");
-// let startingPointLog = document.getElementById('starting-point-log');
+// let startingPointInput =
+//  document.querySelector("input[id='starting-point-input']");
+// let startingPointLog =
+//  document.getElementById('starting-point-log');
 //
 // startingPointInput.oninput = handleInput;
 //
@@ -7,3 +9,5 @@
 //   startingPointLog.textContent = `Preparing to search for
 //       ${e.target.value}.....`;
 // }
+
+// Goal: Build the necessary features, one step at a time.
