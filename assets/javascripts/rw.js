@@ -1,24 +1,52 @@
 // Goal: Build the necessary features, one step at a time.
 // 1. html form/input to get user starting location; display input string
-document.getElementById('origin-input-button').onclick = function logSearchInitiation(e) {
-  // note: e has no inpact on the function at this time.
-  let originInput = document.getElementById('origin-input').value; // originInput in window element *ask*
-  document.getElementById('origin-log').textContent =
-    originInput.length > 0
-      ? `Searching for ${originInput} .....`
-      : "Please enter a value!";
-      // TODO make this error handling more robust and organized
-      // TODO loop in fetchLocationSearch here
-  fetchLocationSearch(originInput)
-    .then((response) => {
-        return response.json();
-    })
-    .then((data) => {
-      // console.log(data);
-      // window.tempLog = data; // TODO remove this
-      populateSelect("origin-select", data)
-    })
+// originInputButton.onclick = function initiateSearch(e) {
+//   let originInput = document.getElementById('origin-input').value;
+//   document.getElementById('origin-log').textContent =
+//     originInput.length > 0
+//       ? `Searching for ${originInput} .....`
+//       : "Please enter a value!";
+//   fetchLocationSearch(originInput)
+//     .then((response) => {return response.json();})
+//     .then((data) => {populateSelect("origin-select", data)})
+// }
+
+//rebuild the above to be more general, e.g., also accept destination info
+const destinationInputButton = document.getElementById('destination-input-button');
+const originInputButton = document.getElementById('origin-input-button');
+
+const readEndpointInput = (endpointType) => {
+  return document.querySelector(`input[id=${endpointType}]`).value;
+  // called multiple times hereafter as searchString
 }
+
+const setEndpointLog = (endpointType, searchString) => {
+//  searchString = readEndpointInput(endpointType);
+  document.querySelector(`p[id=${endpointType}]`).textContent =
+      searchString.length > 0
+        ? `Searching for ${searchString} .....`
+        : "Please enter a value!";
+}
+
+// detect which *-input-button is pressed
+const submitRouteEndpoint = (e) => {
+  buttonId = e.target.id;
+  if (buttonId === 'destination-input-button') {
+    endpointType = 'destination';
+  }
+  if (buttonId === 'origin-input-button') {
+    endpointType = 'origin';
+  }
+  searchString = readEndpointInput(endpointType);
+  setEndpointLog(endpointType, searchString);
+  fetchLocationSearch(searchString)
+    .then((response) => {return response.json();})
+    .then((data) => {populateSelect(endpointType, data)})
+}
+
+originInputButton.onclick = submitRouteEndpoint;
+destinationInputButton.onclick = submitRouteEndpoint;
+
 
 // 2. mapbox tools + fetch
 let baseRequestURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
@@ -72,7 +100,7 @@ const buildLocationArray = (mapboxData) => {
 
 // clear & populate the select fields with location data
 const populateSelect = (arrayId, mapboxData) => {
-  let dropdown = document.getElementById(arrayId);
+  let dropdown = document.querySelector(`select[id="${arrayId}"`);
   dropdown.length = 0;
   let defaultOption = document.createElement('option');
   defaultOption.text = '-- SELECT --';
@@ -83,8 +111,14 @@ const populateSelect = (arrayId, mapboxData) => {
   let option;
   for (let i = 0; i < len; i ++) {
     option = document.createElement('option');
-    option.value = locationArray[i].id;
+    option.value = locationArray[i].id; // not clear that this is the best "value" choice
     option.text = locationArray[i].name.long;
     dropdown.add(option);
   }
+}
+
+// access selection from, for example, origin-select
+document.getElementById('origin-select-button').onclick = function recordSelection(e) {
+  let originSelection = document.getElementById('origin-select').value;
+  console.log(originSelection)
 }
