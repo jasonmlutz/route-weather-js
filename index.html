@@ -15,16 +15,33 @@
       predicted or observed weather conditions at each step of the route.</p>
 
       <h2>Get Started</h2>
+
       <div class="navigation-form">
-        <label for="origin-input">Please enter your starting point: </label>
-        <input type="text" name="origin-input" id="origin-input" value="" />
-        <input type="button" value="submit" id='origin-input-button'>
-        <p id='origin-log'></p>
+        <h3>Starting Point</h3>
+        <label for="origin-input">Search for your starting point: </label>
+        <input type="text" name="origin-input" id="origin" value="" />
+        <input type="button" value="search" id='origin-input-button'>
+        <p id='origin'></p>
         <label for="origin-select">Select your desired starting point: </label>
         <p>
-          <select name="origin-select" id="origin-select">
-            <option value="0">test</option>
+          <select name="origin-select" id="origin">
+          <option value="0">test</option>
           </select>
+          <input type="button" value="submit" id='origin-select-button'>
+        </p>
+      </div>
+      <div class="navigation-form">
+        <h3>Destination</h3>
+        <label for="destination-input">Search for your destination: </label>
+        <input type="text" name="destination-input" id="destination" value="" />
+        <input type="button" value="search" id='destination-input-button'>
+        <p id='destination'></p>
+        <label for="destination-select">Select your desired destination: </label>
+        <p>
+          <select name="destination-select" id="destination">
+          <option value="0">test</option>
+          </select>
+          <input type="button" value="submit" id='destination-select-button'>
         </p>
       </div>
       <h3>Credits</h3>
