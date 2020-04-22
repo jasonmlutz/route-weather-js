@@ -14,8 +14,9 @@ document.getElementById('origin-input-button').onclick = function logSearchIniti
         return response.json();
     })
     .then((data) => {
-      console.log(data);
-      window.tempLog = data; // TODO remove this
+      // console.log(data);
+      // window.tempLog = data; // TODO remove this
+      populateSelect("origin-select", data)
     })
 }
 
@@ -67,4 +68,23 @@ const buildLocationArray = (mapboxData) => {
     )
   }
   return locationArray
+}
+
+// clear & populate the select fields with location data
+const populateSelect = (arrayId, mapboxData) => {
+  let dropdown = document.getElementById(arrayId);
+  dropdown.length = 0;
+  let defaultOption = document.createElement('option');
+  defaultOption.text = '-- SELECT --';
+  dropdown.add(defaultOption);
+  dropdown.selectedIndex = 0;
+  locationArray = buildLocationArray(mapboxData);
+  len = locationArray.length;
+  let option;
+  for (let i = 0; i < len; i ++) {
+    option = document.createElement('option');
+    option.value = locationArray[i].id;
+    option.text = locationArray[i].name.long;
+    dropdown.add(option);
+  }
 }
