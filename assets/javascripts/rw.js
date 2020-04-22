@@ -29,7 +29,7 @@ const setEndpointLog = (endpointType, searchString) => {
 }
 
 // detect which *-input-button is pressed
-const submitRouteEndpoint = (e) => {
+const submitRouteEndpointSearch = (e) => {
   buttonId = e.target.id;
   if (buttonId === 'destination-input-button') {
     endpointType = 'destination';
@@ -44,8 +44,8 @@ const submitRouteEndpoint = (e) => {
     .then((data) => {populateSelect(endpointType, data)})
 }
 
-originInputButton.onclick = submitRouteEndpoint;
-destinationInputButton.onclick = submitRouteEndpoint;
+originInputButton.onclick = submitRouteEndpointSearch;
+destinationInputButton.onclick = submitRouteEndpointSearch;
 
 
 // 2. mapbox tools + fetch
@@ -117,8 +117,30 @@ const populateSelect = (arrayId, mapboxData) => {
   }
 }
 
-// access selection from, for example, origin-select
-document.getElementById('origin-select-button').onclick = function recordSelection(e) {
-  let originSelection = document.getElementById('origin-select').value;
-  console.log(originSelection)
+// re-build the recordSelection to accept both origin and destination
+const recordSelection = (e) => {
+  // detect button type and adjust
+  let buttonId = e.target.id;
+  let endpointType;
+  if (buttonId === 'destination-select-button') {
+    endpointType = 'destination';
+  }
+  if (buttonId === 'origin-select-button') {
+    endpointType = 'origin';
+  }
+  console.log(`endpoint recorded as ${endpointType}`)
+  let logSelection = document.querySelector(`select[id=${endpointType}]`).value
+  console.log(`selection recorded as ${logSelection}`)
 }
+
+const destinationSelectButton = document.getElementById('destination-select-button');
+const originSelectButton = document.getElementById('origin-select-button');
+
+originSelectButton.onclick = recordSelection;
+destinationSelectButton.onclick = recordSelection;
+
+// access selection from, for example, origin-select
+// document.getElementById('origin-select-button').onclick = function recordSelection(e) {
+  // let originSelection = document.querySelector('select[id="origin"]').value;
+  // console.log(originSelection)
+// }
