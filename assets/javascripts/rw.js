@@ -12,20 +12,21 @@
 // }
 
 //rebuild the above to be more general, e.g., also accept destination info
-const destinationInputButton = document.getElementById('destination-input-button');
 const originInputButton = document.getElementById('origin-input-button');
+const destinationInputButton = document.getElementById('destination-input-button');
 
 const readEndpointInput = (endpointType) => {
   return document.querySelector(`input[id=${endpointType}]`).value;
   // called multiple times hereafter as searchString
 }
 
-const setEndpointLog = (endpointType, searchString) => {
+const setEndpointLog = (endpointType, logString) => {
 //  searchString = readEndpointInput(endpointType);
   document.querySelector(`p[id=${endpointType}]`).textContent =
-      searchString.length > 0
-        ? `Searching for ${searchString} .....`
-        : "Please enter a value!";
+    logString;
+      // searchString.length > 0
+      //   ? `Searching for ${searchString} .....`
+      //   : "Please enter a value!";
 }
 
 // detect which *-input-button is pressed
@@ -38,10 +39,17 @@ const submitRouteEndpointSearch = (e) => {
     endpointType = 'origin';
   }
   searchString = readEndpointInput(endpointType);
-  setEndpointLog(endpointType, searchString);
-  fetchLocationSearch(searchString)
-    .then((response) => {return response.json();})
-    .then((data) => {populateSelect(endpointType, data)})
+  if (searchString.length === 0) {
+    setEndpointLog(endpointType, "Please enter a value!");
+    return;
+  } else {
+    logString = `Searching for ${searchString} ...`
+    setEndpointLog(endpointType, logString);
+    fetchLocationSearch(searchString)
+      .then((response) => {return response.json();})
+      .then((data) => {populateSelect(endpointType, data)})
+  }
+
 }
 
 originInputButton.onclick = submitRouteEndpointSearch;
@@ -129,8 +137,9 @@ const recordSelection = (e) => {
     endpointType = 'origin';
   }
   console.log(`endpoint recorded as ${endpointType}`)
-  let logSelection = document.querySelector(`select[id=${endpointType}]`).value
-  console.log(`selection recorded as ${logSelection}`)
+  let selectionValue = document.querySelector(`select[id=${endpointType}]`).value
+  let selectionText = document.querySelector(`select[id=${endpointType}]`).text
+  console.log(`selection recorded as ${selectionValue}: ${selectionText}`)
 }
 
 const destinationSelectButton = document.getElementById('destination-select-button');
@@ -139,8 +148,6 @@ const originSelectButton = document.getElementById('origin-select-button');
 originSelectButton.onclick = recordSelection;
 destinationSelectButton.onclick = recordSelection;
 
-// access selection from, for example, origin-select
-// document.getElementById('origin-select-button').onclick = function recordSelection(e) {
-  // let originSelection = document.querySelector('select[id="origin"]').value;
-  // console.log(originSelection)
-// }
+const displaySelection = () => {
+
+}
