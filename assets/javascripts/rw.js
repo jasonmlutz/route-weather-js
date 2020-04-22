@@ -137,9 +137,10 @@ const recordSelection = (e) => {
     endpointType = 'origin';
   }
   console.log(`endpoint recorded as ${endpointType}`)
-  let selectionValue = document.querySelector(`select[id=${endpointType}]`).value
-  let selectionText = document.querySelector(`select[id=${endpointType}]`).text
-  console.log(`selection recorded as ${selectionValue}: ${selectionText}`)
+  let selectionId = document.querySelector(`select[id=${endpointType}]`).value
+  // let
+  // console.log(`selection recorded as ${selectionId}: ${selectionText}`)
+  displaySelection(endpointType, selectionId);
 }
 
 const destinationSelectButton = document.getElementById('destination-select-button');
@@ -148,6 +149,8 @@ const originSelectButton = document.getElementById('origin-select-button');
 originSelectButton.onclick = recordSelection;
 destinationSelectButton.onclick = recordSelection;
 
-const displaySelection = () => {
-
+const displaySelection = (endpointType, locationId) => {
+  let selectionText = document.querySelector(`option[value='${locationId}']`).textContent;
+  let logId = `${endpointType}-selection-log`;
+  document.getElementById(logId).textContent = `${endpointType} = ${selectionText}`;
 }
