@@ -50,12 +50,18 @@
       </div>
       <h2>Confirm Your Selections</h2>
       <div class="finalize-selections">
-        <h3>Navigation Endpoints</h3>
-          <p id="origin-selection-log">No starting point selected!</p>
-          <p id="destination-selection-log">No destination selected!</p>
+        <h3>Starting Point</h3>
+          <p id="origin-selection-log", title="-117.54,47.62">99224</p>
+          <!-- <p id="origin-selection-log">No starting point selected!</p> -->
+        <h3>Destination</h3>
+          <span id="destination-selection-log-span" title="">
+            <p id="destination-selection-log", title="-108.49,45.84">59105</p>
+          </span>
+          <!-- <p id="destination-selection-log">No destination selected!</p> -->
         <h3>Departure Time</h3>
           <p>under construction</p>
-          <input type="button" name="submit-navigation" value="Navigate!">
+          <input type="button" id="submit-navigation" value="Navigate!">
+          <p id="navigationLog"></p>
       </div>
       <h3>Credits</h3>
       <p>Weather data <a target="_blank" href="http://darksky.net/dev">Powered by Dark Sky</a>.</p>
