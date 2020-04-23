@@ -1,35 +1,14 @@
-// Goal: Build the necessary features, one step at a time.
-// 1. html form/input to get user starting location; display input string
-// originInputButton.onclick = function initiateSearch(e) {
-//   let originInput = document.getElementById('origin-input').value;
-//   document.getElementById('origin-log').textContent =
-//     originInput.length > 0
-//       ? `Searching for ${originInput} .....`
-//       : "Please enter a value!";
-//   fetchLocationSearch(originInput)
-//     .then((response) => {return response.json();})
-//     .then((data) => {populateSelect("origin-select", data)})
-// }
-
-//rebuild the above to be more general, e.g., also accept destination info
 const originInputButton = document.getElementById('origin-input-button');
 const destinationInputButton = document.getElementById('destination-input-button');
 
 const readEndpointInput = (endpointType) => {
   return document.querySelector(`input[id=${endpointType}]`).value;
-  // called multiple times hereafter as searchString
 }
 
 const setEndpointLog = (endpointType, logString) => {
-//  searchString = readEndpointInput(endpointType);
-  document.querySelector(`p[id=${endpointType}]`).textContent =
-    logString;
-      // searchString.length > 0
-      //   ? `Searching for ${searchString} .....`
-      //   : "Please enter a value!";
+  document.querySelector(`p[id=${endpointType}]`).textContent = logString;
 }
 
-// detect which *-input-button is pressed
 const submitRouteEndpointSearch = (e) => {
   buttonId = e.target.id;
   if (buttonId === 'destination-input-button') {
@@ -55,30 +34,31 @@ const submitRouteEndpointSearch = (e) => {
 originInputButton.onclick = submitRouteEndpointSearch;
 destinationInputButton.onclick = submitRouteEndpointSearch;
 
+let geocodingBaseURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
 
-// 2. mapbox tools + fetch
-let baseRequestURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
-
-const generateMapboxURL = (searchText) => {
+const generateGeocodingURL = (searchText) => {
   if (typeof searchText !== "string") {
     console.warn(`searchText {${searchText}} is not of type "string"`);
   } else {
     encodedSearchText = encodeURI(searchText);
-    return `${baseRequestURL}${encodedSearchText}.json?access_token=${mapBoxToken}`;
+    return `${geocodingBaseURL}${encodedSearchText}.json?access_token=${mapBoxToken}`;
   }
 }
 
-const fetchLocationSearch = (searchText) => {
-  return fetch(generateMapboxURL(searchText))
+let navigationBaseURL = 'https://api.mapbox.com/directions/v5/mapbox/driving/'
+
+const generateNavigationURL = (originCoords, destinationCoords) => {
+  return `${navigationBaseURL}${originCoords};${destinationCoords}?steps=true&access_token=${mapBoxToken}`;
 }
 
-// 3. parse and prepare to display the fetched place_names
-// basic structure:
-// tempLog.features.forEach(feature => {
-//     console.log(feature.place_name);
-// })
+const fetchLocationSearch = (searchText) => {
+  return fetch(generateGeocodingURL(searchText))
+}
 
-// build a single object associated with one feature fetched from Mapbox
+const fetchNavigation = (originCoords, destinationCoords) => {
+  return fetch(generateNavigationURL(originCoords, destinationCoords))
+}
+
 const constructLocationObject = (inputFeature) => {
   let outputObject = {
     name: {
@@ -87,14 +67,14 @@ const constructLocationObject = (inputFeature) => {
     },
     coords: {
       lat: inputFeature.center[1],
-      long: inputFeature.center[0]
+      long: inputFeature.center[0],
+      searchString: `${inputFeature.center[0]},${inputFeature.center[1]}`
     },
-    id: inputFeature.id
+    id: inputFeature.id,
   };
   return outputObject
 }
 
-// build an array of objects with place_name and other data
 const buildLocationArray = (mapboxData) => {
   let len = mapboxData.features.length;
   let locationArray = [];
@@ -106,7 +86,6 @@ const buildLocationArray = (mapboxData) => {
   return locationArray
 }
 
-// clear & populate the select fields with location data
 const populateSelect = (arrayId, mapboxData) => {
   let dropdown = document.querySelector(`select[id="${arrayId}"`);
   dropdown.length = 0;
@@ -119,15 +98,13 @@ const populateSelect = (arrayId, mapboxData) => {
   let option;
   for (let i = 0; i < len; i ++) {
     option = document.createElement('option');
-    option.value = locationArray[i].id; // not clear that this is the best "value" choice
+    option.value = locationArray[i].coords.searchString;
     option.text = locationArray[i].name.long;
     dropdown.add(option);
   }
 }
 
-// re-build the recordSelection to accept both origin and destination
 const recordSelection = (e) => {
-  // detect button type and adjust
   let buttonId = e.target.id;
   let endpointType;
   if (buttonId === 'destination-select-button') {
@@ -136,10 +113,7 @@ const recordSelection = (e) => {
   if (buttonId === 'origin-select-button') {
     endpointType = 'origin';
   }
-  console.log(`endpoint recorded as ${endpointType}`)
   let selectionId = document.querySelector(`select[id=${endpointType}]`).value
-  // let
-  // console.log(`selection recorded as ${selectionId}: ${selectionText}`)
   displaySelection(endpointType, selectionId);
 }
 
@@ -152,5 +126,25 @@ destinationSelectButton.onclick = recordSelection;
 const displaySelection = (endpointType, locationId) => {
   let selectionText = document.querySelector(`option[value='${locationId}']`).textContent;
   let logId = `${endpointType}-selection-log`;
-  document.getElementById(logId).textContent = `${endpointType} = ${selectionText}`;
+  document.getElementById(logId).textContent = selectionText;
+  document.getElementById(logId).title = locationId;
 }
+
+const navigateButton = document.getElementById('submit-navigation');
+
+const fetchNavigationCoords = (e) => {
+  let confirmedOrigin = document.getElementById("origin-selection-log").title;
+  let confirmedDestination = document.getElementById("destination-selection-log").title;
+  // document.getElementById('navigationLog').textContent = `navigating ${confirmedOrigin} --> ${confirmedDestination}`
+  document.getElementById('navigationLog').textContent = generateNavigationURL(confirmedOrigin, confirmedDestination);
+  fetchNavigation(confirmedOrigin, confirmedDestination)
+    .then((response) => {
+      return response.json();
+      })
+    .then((data) => {
+      console.log(data);
+      window.logData = data
+    })
+}
+
+navigateButton.onclick = fetchNavigationCoords;
